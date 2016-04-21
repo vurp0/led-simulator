@@ -61,9 +61,9 @@ impl App {
     self.gl.draw(args.viewport(), |c, gl| {
       clear(BLACK, gl);
 
-      for led in 0..leds.len() {
-        ellipse([(leds[led].r as f32)/127 as f32, (leds[led].g as f32)/127 as f32, (leds[led].b as f32)/127 as f32, 1.0],
-          square, c.transform.trans((led as f64)*20 as f64, 0 as f64), gl);
+      for (i, led) in leds.iter().enumerate() {
+        ellipse([(led.r as f32)/127 as f32, (led.g as f32)/127 as f32, (led.b as f32)/127 as f32, 1.0],
+          square, c.transform.trans((i as f64)*20 as f64, 0 as f64), gl);
       }
     });
   }
@@ -74,6 +74,7 @@ impl App {
       Ok(n) => {
         for x in buffer.iter() {
           if let Some((n @ 0...49, r, g, b)) = self.parser.parse(*x) {
+            //println!("DEBUG: LED {} old value {},{},{}, new value {},{},{}", n, leds[n as usize].r, leds[n as usize].g, leds[n as usize].b, r, g, b);
             leds[n as usize].r = r;
             leds[n as usize].g = g;
             leds[n as usize].b = b;
@@ -108,7 +109,7 @@ fn main() {
 
   let mut events = window.events();
   events.set_ups(3000);
-  events.set_max_fps(60);
+  events.set_max_fps(120);
   while let Some(e) = events.next(&mut window) {
     if let Some(r) = e.render_args() {
       app.render(&leds, &r);

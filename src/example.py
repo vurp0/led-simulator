@@ -12,6 +12,6 @@ ser = os.fdopen(sys.stdout.fileno(), 'wb')
 while 1:
   for x in range(50):
     color = colorsys.hsv_to_rgb((time.time()*100+x/50)%1, 1, 1)
-    ser.write(bytes([x,
+    ser.write(bytes([x|0b10000000,
       int(color[0]*127),int(color[1]*127),int(color[2]*127)]))
     ser.flush()
